@@ -1,0 +1,34 @@
+Modelo1:
+Calendário =ADDCOLUMNS(
+CALENDARAUTO(),
+"Ano",FORMAT([Date],"yyyy"),
+"Mês",MONTH([Date]),
+"Mês Nome",FORMAT([Date],"mmm"),
+"Trimestre",QUARTER([Date]),
+"Dia",DAY([Date]),
+"Dia Nome",FORMAT([Date],"ddd"),
+"Semana do Mês", WEEKNUM([Date])-WEEKNUM(DATE(YEAR([Date]),MONTH([Date]),1))+1,
+"MesAno",CONCATENATE(YEAR([Date]),FORMAT(MONTH([Date]),"-00"))
+)
+
+Modelo2:
+Calendário = 
+ADDCOLUMNS(
+  ADDCOLUMNS(
+      CALENDARAUTO(), //CALENDAR(”DataInicio” OU MIM(Base[Data]),"DataFinal” OU MAX(Base[Data]))
+      "Ano", YEAR([Date]),
+      "TriAno", FORMAT([Date],"qTyyyy"),
+      "Trimestre", QUARTER([Date]),
+      "Trimeste ID", FORMAT([Date],"qT"),
+      "Mês", MONTH([Date]),
+      "Mês Nome", FORMAT([Date],"mmm"),
+      "Dia", DAY([Date]),
+      "Dia Nome", FORMAT([Date],"ddd"),
+      "Dia Semana", WEEKDAY([Date])
+    ),
+    "AnoMes Class", [Ano]*100+[Mês],
+    "AnoTri Class", [Ano]*100+[Trimestre],
+    "Semana do Mês", WEEKNUM([Date])-WEEKNUM(DATE([Ano],[Mês],1))+1,
+    "Dia Útil", IF([Dia Semana] IN {1,7},"Não","Sim"),
+    "DiaDia", CONCATENATE([Dia],"/"&[Dia Nome])
+)
